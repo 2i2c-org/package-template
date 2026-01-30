@@ -60,11 +60,11 @@ dev = [
 [tool.hatch.build]
 only-packages = true
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/<package_name>"]
+# [tool.hatch.build.targets.wheel]
+# packages = ["src/<package_name>"]
 
-[tool.hatch.build.hooks.vcs]
-version-file = "src/<package_name>/_version.py"
+# [tool.hatch.build.hooks.vcs]
+# version-file = "src/<package_name>/_version.py"
 
 [tool.hatch.version]
 source = "vcs"
@@ -176,8 +176,8 @@ dependencies = [
     "mypy",
 ]
 
-[tool.hatch.envs.types.scripts]
-check = "mypy src/<package_name>"
+# [tool.hatch.envs.types.scripts]
+# check = "mypy src/<package_name>"
 
 [tool.hatch.envs.docs]
 description = """Build or serve the documentation."""
