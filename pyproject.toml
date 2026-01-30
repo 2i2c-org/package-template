@@ -176,8 +176,8 @@ dependencies = [
     "mypy",
 ]
 
-# [tool.hatch.envs.types.scripts]
-# check = "mypy src/<package_name>"
+[tool.hatch.envs.types.scripts]
+check = "mypy src/package_name"
 
 [tool.hatch.envs.docs]
 description = """Build or serve the documentation."""
