@@ -149,7 +149,7 @@ dependencies = [
 python = ["3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
-run = "pytest {args:--cov=src/project_name --cov-report=term-missing --cov-report=xml}"
+run = "pytest {args:--cov=src/package_name --cov-report=term-missing --cov-report=xml}"
 
 [tool.hatch.envs.style]
 description = """Check the style of the codebase."""
