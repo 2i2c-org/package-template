@@ -61,10 +61,10 @@ dev = [
 only-packages = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["<package_path>"]
+packages = ["src/<package_name>"]
 
 [tool.hatch.build.hooks.vcs]
-version-file = "<package_path>/_version.py"
+version-file = "src/<package_name>/_version.py"
 
 [tool.hatch.version]
 source = "vcs"
@@ -87,17 +87,17 @@ exclude = "_version.py"
 testpaths = ["tests"]
 markers = ["raises"]
 
-# [tool.coverage.paths]
-# source = [
-#     "src/<project_name",
-# ]
+[tool.coverage.paths]
+source = [
+    "src/<project_name>",
+]
 
 [tool.coverage.run]
 branch = true
 parallel = true
-# omit = [
-#     "src/<project_name>/_version.py",
-# ]
+omit = [
+    "src/<project_name>/_version.py",
+]
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover"]
@@ -149,7 +149,7 @@ dependencies = [
 python = ["3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
-run = "pytest {args:--cov=<project_name> --cov-report=term-missing --cov-report=xml}"
+run = "pytest {args:--cov=src/<project_name> --cov-report=term-missing --cov-report=xml}"
 
 [tool.hatch.envs.style]
 description = """Check the style of the codebase."""
@@ -177,7 +177,7 @@ dependencies = [
 ]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy <package_path>"
+check = "mypy src/<package_name>"
 
 [tool.hatch.envs.docs]
 description = """Build or serve the documentation."""
