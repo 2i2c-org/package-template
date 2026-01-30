@@ -60,8 +60,8 @@ dev = [
 [tool.hatch.build]
 only-packages = true
 
-# [tool.hatch.build.targets.wheel]
-# packages = ["src/<package_name>"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/package_name"]
 
 # [tool.hatch.build.hooks.vcs]
 # version-file = "src/<package_name>/_version.py"
