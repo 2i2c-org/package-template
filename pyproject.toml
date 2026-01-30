@@ -11,13 +11,13 @@ requires = ["hatchling", "hatch-vcs"]
 ################################################################################
 
 [project]
-name = "<project_name>"
+name = "project_name"
 
 dynamic = ["version"]
 
-description = "<project_description>"
+description = "project_description"
 authors = [
-    { name = "<your_name>", email = "<your_email>" },
+    { name = "your_name", email = "your_email@somewhere.com" },
 ]
 license = "BSD-3-Clause"
 readme = {"file" = "README.md", "content-type" = "text/markdown"}
@@ -89,14 +89,14 @@ markers = ["raises"]
 
 [tool.coverage.paths]
 source = [
-    "src/<project_name>",
+    "src/project_name",
 ]
 
 [tool.coverage.run]
 branch = true
 parallel = true
 omit = [
-    "src/<project_name>/_version.py",
+    "src/project_name/_version.py",
 ]
 
 [tool.coverage.report]
@@ -149,7 +149,7 @@ dependencies = [
 python = ["3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
-run = "pytest {args:--cov=src/<project_name> --cov-report=term-missing --cov-report=xml}"
+run = "pytest {args:--cov=src/project_name --cov-report=term-missing --cov-report=xml}"
 
 [tool.hatch.envs.style]
 description = """Check the style of the codebase."""
