@@ -1,45 +1,107 @@
 ################################################################################
+# Build Configuration
+################################################################################
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
+
+################################################################################
+# Project Configuration
+################################################################################
+
+[project]
+name = "project_name"
+
+dynamic = ["version"]
+
+description = "project_description"
+authors = [
+    { name = "your_name", email = "your_email@somewhere.com" },
+]
+license = "BSD-3-Clause"
+readme = {"file" = "README.md", "content-type" = "text/markdown"}
+# Please consult https://pypi.org/classifiers/ for a full list.
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Typing :: Typed",
+]
+
+keywords = []
+
+# Package dependencies
+dependencies = []
+
+[project.urls]
+Homepage = ""
+"Source Code" = ""
+"Bug Tracker" = ""
+Documentation = ""
+Download = ""
+
+# [project.scripts]
+# script = "<package>.__main__:<entrypoint>"
+
+[project.optional-dependencies]
+dev = [
+    "hatch",
+    "pre-commit",
+]
+
+################################################################################
 # Tool Configuration
 ################################################################################
 
+# Exclude files outside package
+[tool.hatch.build]
+only-packages = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/package_name"]
+
+# [tool.hatch.build.hooks.vcs]
+# version-file = "src/<package_name>/_version.py"
+
+[tool.hatch.version]
+source = "vcs"
+
+# The default isort output conflicts with black autoformatting.
+# Tell isort to behave nicely with black
+# See https://pycqa.github.io/isort/docs/configuration/black_compatibility.html
+# for more information.
+[tool.isort]
+profile = "black"
+
+[tool.pydoclint]
+style = "google"  # TODO: Other styles are possible here, like 'numpy'
+arg-type-hints-in-docstring = false
+check-return-types = false
+check-yield-types = false
+exclude = "_version.py"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = [
-    "docs: Tests relating to generated documentation!",
-    "installs: Tests that install packages, e.g. from executing hatch env scripts",
+markers = ["raises"]
+
+[tool.coverage.paths]
+source = [
+    "src/project_name",
 ]
 
-[tool.ruff]
-line-length = 88
-
-[tool.ruff.lint]
-select = ["ALL"]
-ignore = [
-    "D107",  # 'Missing docstring in __init__' ignored because pydoclint wants us to document the class instead.
-    "D203",  # '1 blank line required before class docstring' ignored because we want no blank line.
-    "D212",  # 'Multi-line docstring summary should start at the first line' ignored because we want the summary to start on the second line.
-    "D407",  # 'Missing dashed underline after section' ignored because Google style docstrings don't underline.
-    "ANN002",  # 'Missing type annotation for {*args} in method'.
-    "ANN003",  # 'Missing type annotation for {*kwargs} in method'.
-    "ANN101",  # 'Missing type annotation for {self} in method'.
-    "ANN102",  # 'Missing type annotation for {cls} in classmethod'.
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+    "src/project_name/_version.py",
 ]
 
-[tool.ruff.lint.extend-per-file-ignores]
-"tests/**/*.py" = [
-    "A001",
-    "A002",
-    "S101",  # 'Use of assert detected' ignored because we are using pytest.
-    "INP001",  # 'Insecure input' ignored because we are testing.
-    "ANN201",  # 'Missing type annotation for {return}' ignored because all tests return `None`.
-    "S602",
-    "S603",
-    "S607",
-]
-
-[tool.ruff.lint.isort]
-case-sensitive = true
-lines-after-imports = 1
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover"]
+precision = 2
 
 ################################################################################
 # Hatch Environments
@@ -47,48 +109,81 @@ lines-after-imports = 1
 
 [tool.hatch.envs.default]
 skip-install = true
-installer = "uv"
 
 [tool.hatch.envs.dev]
 description = """
 Describe the environment for local development.
 """
-dependencies = [
-    "copier ~=9.3",
-]
+dependencies = []
 path = ".venv"
 
+[tool.hatch.envs.install]
+description = """Test the installation the package."""
+dependencies = [
+    "pip",
+    "twine",
+]
+detached = true
+builder = true
+
+[tool.hatch.envs.install.scripts]
+check = [
+    "pip check",
+    "hatch build {args:--clean}",
+    "twine check dist/*",
+]
 
 [tool.hatch.envs.test]
 description = """
-Test the instantiation of the template.
+Run test suite
 """
 dependencies = [
-    "copier ~=9.3",
-    "GitPython ~=3.1",
-    "hatch ~=1.12",
-    "jinja2 ~=3.1",
-    "pytest ~=8.3",
-    "pytest-xdist ~=3.6",
-    "pre-commit",
-    "ruamel.yaml>=0.18.0",
-    "validate-pyproject >=0.22",
-    "trove-classifiers>=2021.10.20",
-    "tomli >=2.0.2; python_version<'3.11'",
-    "mkdocs-material ~=9.5",
-    "mkdocstrings[python] ~=0.24",
-    "mkdocs-awesome-pages-plugin ~=2.9",
-    "pydata_sphinx_theme ~=0.16",
-    "myst-parser ~=4.0",
-    "sphinx ~=8.0",
-    "sphinx-autobuild>=2024.10.3",
-    "sphinx-autoapi>=3.6.0",
-    "sphinx_design>=0.6.1",
-    "sphinx-copybutton",
+    "pytest",
+    "pytest-cov",
+    "pytest-raises",
+    "pytest-randomly",
+    "pytest-xdist",
 ]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11", "3.12", "3.13"]
+python = ["3.12", "3.13", "3.14"]
 
 [tool.hatch.envs.test.scripts]
-run = "pytest {args:--numprocesses=auto}"
+run = "pytest {args:--cov=src/package_name --cov-report=term-missing --cov-report=xml}"
+
+[tool.hatch.envs.style]
+description = """Check the style of the codebase."""
+dependencies = [
+    "pydoclint",
+]
+detached = true
+
+[tool.hatch.envs.style.scripts]
+docstrings = "pydoclint"
+check = ["docstrings"]
+
+[tool.hatch.envs.audit]
+description = """Check dependencies for security vulnerabilities."""
+extra-dependencies = [
+    "pip-audit",
+]
+
+[tool.hatch.envs.audit.scripts]
+check = ["pip-audit"]
+[tool.hatch.envs.types]
+description = """Check the static types of the codebase."""
+dependencies = [
+    "mypy",
+]
+
+[tool.hatch.envs.types.scripts]
+check = "mypy src/package_name"
+
+[tool.hatch.envs.docs]
+description = """Build or serve the documentation."""
+python = "3.14"
+dependencies = []
+
+# [tool.hatch.envs.docs.scripts]
+# build = []
+# serve = []
